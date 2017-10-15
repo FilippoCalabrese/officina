@@ -1,7 +1,9 @@
-# officina
-Repository del progetto CMS della gestione officina. Ogni cambiamento al codice deve essere committato con un opportuno messaggio descrittivo.
+# CMS OFFICINA
 
-git commit -m "descrizione"
-git push
+Repository del CMS gestionale ell'officina. Ogni cambiamento al codice deve essere committato ed opportunamente descritto
 
-Happy Coding!
+    git commit -m "descrizione modifiche"
+    git push
+
+
+
