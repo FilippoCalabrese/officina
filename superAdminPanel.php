@@ -9,9 +9,9 @@
         
     }
 
-    if (array_key_exists("id", $_SESSION) AND $_SESSION['level_id']==10) {
+    if (array_key_exists("id", $_SESSION) AND $_SESSION['level_id']==999) {
         
-        echo "<p>Loggato come Utente Semplice! <a href='index.php?logout=1'>Log out</a></p>";
+        echo "<p>Loggato come Super Admin! <a href='index.php?logout=1'>Log out</a></p>";
         
     } else {
         
