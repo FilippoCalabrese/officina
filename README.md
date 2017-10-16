@@ -6,7 +6,7 @@ Repository del CMS gestionale ell'officina. Ogni cambiamento al codice deve esse
     git push
 
 #TO-DO
--aggiunta nuovo utente da pannello di amministrazione
--hash delle password alla registrazione e al login!! Altrimenti non funziona niente
--implementare le altre funzioni varie
+    -aggiunta nuovo utente da pannello di amministrazione
+    -hash delle password alla registrazione e al login!! Altrimenti non funziona niente
+    -implementare le altre funzioni varie
 
