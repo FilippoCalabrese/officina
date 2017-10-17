@@ -4,7 +4,7 @@ session_start();
 $error = "";
 if (array_key_exists("logout", $_GET)) {
     
-    unset($_SESSION);
+    session_unset();
   
     setcookie("id", "", time() - 60 * 60);
   
@@ -94,9 +94,8 @@ if (array_key_exists("submit", $_POST)) {
             } else {
                 
                 $error = "Login fallito. Riprova";
-                
+              
             }
-            
         } else {
             
             $error = "Login fallito. Riprova.";
