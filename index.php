@@ -19,10 +19,15 @@ if (array_key_exists("logout", $_GET)) {
     if(($_SESSION['level_id']==999) or ($_COOKIE['level_id'] == 999)){
                     
       header("Location: superAdminPanel.php");
+      
     }else if(($_SESSION['level_id']==100) or ($_COOKIE['level_id'] == 100)) {
+        
       header("Location: adminPanel.php");
+      
     } else {
+        
       header("Location: loggedinpage.php");
+      
     }
 }
 if (array_key_exists("submit", $_POST)) {
@@ -53,6 +58,8 @@ if (array_key_exists("submit", $_POST)) {
         $result = mysqli_query($link, $query);
         
         $row = mysqli_fetch_array($result);
+        
+        mysqli_free_result($result);
         
         if (isset($row)) {
             
