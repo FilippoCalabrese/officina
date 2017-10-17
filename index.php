@@ -1,10 +1,7 @@
 <?php
-
 include 'constants.php';
 session_start();
-
 $error = "";
-
 if (array_key_exists("logout", $_GET)) {
     
     unset($_SESSION);
@@ -21,19 +18,13 @@ if (array_key_exists("logout", $_GET)) {
     
     if(($_SESSION['level_id']==999) or ($_COOKIE['level_id'] == 999)){
                     
-      header("Location: superadminPanel.php");
-
+      header("Location: superAdminPanel.php");
     }else if(($_SESSION['level_id']==100) or ($_COOKIE['level_id'] == 100)) {
-
       header("Location: adminPanel.php");
-
     } else {
-
       header("Location: loggedinpage.php");
-
     }
 }
-
 if (array_key_exists("submit", $_POST)) {
     
     $link = mysqli_connect("shareddb1d.hosting.stackcp.net", "officina", "123stella", "officina-3137abd2");
@@ -104,17 +95,14 @@ if (array_key_exists("submit", $_POST)) {
                 
                 $error = "Login fallito. Riprova";
                 
-                echo $row['password'];
-                
-                echo $_POST['password'];
             }
+            
         } else {
             
             $error = "Login fallito. Riprova.";
         }
     }
 }
-
 ?>
 
 <div id="error"><?php echo $error; ?></div>
