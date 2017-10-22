@@ -2,6 +2,7 @@
 
 
 
+//redireziona l'utente all'appropriata pagina di amministrazione / visualizzazione
 function redirectToCorrectPage(){
   if(($_SESSION['level_id']==999) or ($_COOKIE['level_id'] == 999)){
     header("Location: superAdminPanel.php");
@@ -32,4 +33,7 @@ function checkCookies(){
       $_SESSION['level_id'] = $_COOKIE['level_id'];
   }
 }
+
+
+
 ?>

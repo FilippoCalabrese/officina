@@ -10,10 +10,16 @@ checkCookies();
 verifyPermission(100);
 
 
-
 // rimuove l'utente se si è compilato il form
 if (array_key_exists("deleteUser", $_POST)) {
     deleteUserFromDb($link);
+}
+
+
+
+// rimuove l'utente se si è compilato il form
+if (array_key_exists("deleteJobSubmit", $_POST)) {
+    deleteJobFromDb($link);
 }
 
 
@@ -89,9 +95,17 @@ if (array_key_exists("addUser", $_POST)) {
 
     <!--- MOSTRA I LAVORI PRESENTI NEL SISTEMA -->
   	<p>LAVORI PRESENTI NEL SISTEMA</p>
-      <?php
-        echo showDatabaseWorks($link);
-      ?>
+      <?php echo showDatabaseWorks($link); ?>
+
+
+
+      <!--- FORM PER CANCELLARE JOB -->
+    	<form method="post">
+    		<p>Cancella JOB. Attenzione: non verrà chiesta conferma!</p>
+    		<input type="text" name="deleteJob" placeholder="ID"> <input
+    			type="submit" name="deleteJobSubmit" value="Rimuovi JOB!">
+    	</form>
+    	<br>
 
 
 

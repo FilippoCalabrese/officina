@@ -6,7 +6,6 @@ session_start();
 
 checkCookies();
 verifyPermission(10);
-
 ?>
 
 
@@ -20,9 +19,8 @@ verifyPermission(10);
 
     <!--- MOSTRA I LAVORI PRESENTI NEL SISTEMA -->
   	<p>LAVORI PRESENTI NEL SISTEMA</p>
-      <?php
-        echo showDatabaseWorks($link);
-      ?>
+
+    <?php echo showDatabaseWorks($link); ?>
 
 
 
