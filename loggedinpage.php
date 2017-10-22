@@ -1,23 +1,30 @@
 <?php
+include ('connection.php');
+include ('queryFunctions.php');
+include ('utilityFunctions.php');
+session_start();
 
-    session_start();
-
-    if (array_key_exists("id", $_COOKIE)) {
-        
-        $_SESSION['id'] = $_COOKIE['id'];
-        $_SESSION['level_id'] = $_COOKIE['level_id'];
-        
-    }
-
-    if (array_key_exists("id", $_SESSION) AND $_SESSION['level_id']==10) {
-        
-        echo "<p>Loggato come Utente Semplice! <a href='index.php?logout=1'>Log out</a></p>";
-        
-    } else {
-        
-        header("Location: index.php");
-        
-    }
-
+checkCookies();
+verifyPermission(10);
 
 ?>
+
+
+
+<html>
+  <head>
+  </head>
+  <body>
+
+    <h1> Pannello UTENTE</h1>
+
+    <!--- MOSTRA I LAVORI PRESENTI NEL SISTEMA -->
+  	<p>LAVORI PRESENTI NEL SISTEMA</p>
+      <?php
+        echo showDatabaseWorks($link);
+      ?>
+
+
+
+  </body>
+</html>

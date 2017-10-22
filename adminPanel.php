@@ -1,63 +1,33 @@
 <?php
 include ('connection.php');
 include ('queryFunctions.php');
+include ('utilityFunctions.php');
 session_start();
 
 
 
-//controlla se sono presenti cookie di navigazione ed in caso li usa per visualizzare la pagina
-if (array_key_exists("id", $_COOKIE)) {
-    $_SESSION['id'] = $_COOKIE['id'];
-    $_SESSION['level_id'] = $_COOKIE['level_id'];
-}
-
-
-
-//verifica se l'utente si è loggato con credenziali appropriate a visualizzare la pagina
-if (array_key_exists("id", $_SESSION) and $_SESSION['level_id'] == 100) {
-    echo "<p>Loggato come Amministratore! <a href='index.php?logout=1'>Log out</a></p>";
-} else {
-    header("Location: index.php");
-}
+checkCookies();
+verifyPermission(100);
 
 
 
 // rimuove l'utente se si è compilato il form
 if (array_key_exists("deleteUser", $_POST)) {
-    $userToDelete = $_POST['deleteUsername'];
-    $sql = "DELETE FROM USERS WHERE USERNAME = '" . $userToDelete . "'";
-    $result = $link->query($sql);
-    mysqli_free_result($result);
+    deleteUserFromDb($link);
 }
 
 
 
 // aggiunge un lavoro se è stato compilato il form
 if (array_key_exists("addJob", $_POST)) {
-    $description = $_POST['description'];
-    $note = $_POST['note'];
-    $estimated_time = $_POST['estimated_time'];
-    $delivery = $_POST['delivery'];
-    $sql = "INSERT INTO JOBS (DESCRIPTION, NOTE, CREATED_AT, UPDATED_AT, ESTIMATED_TIME, DELIVERY, OPENED_AT, CLOSED_AT) VALUES ('$description ', '$note', CURRENT_DATE(), CURRENT_DATE(), '$estimated_time', '$delivery', CURRENT_DATE(), CURRENT_DATE())";
-    $result = $link->query($sql);
-    echo $result;
-    mysqli_free_result($result);
+    insertNewWorkInDb($link);
 }
 
 
 
 // aggiunge utente se è stato compilato il form
 if (array_key_exists("addUser", $_POST)) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $firstName = $_POST['firstname'];
-    $lastName = $_POST['lastname'];
-    $access = $_POST['access'];
-    $level_id = $_POST['level_id'];
-    $sql = "INSERT INTO USERS (USERNAME, PASSWORD, FIRSTNAME, LASTNAME, ACCESS, LEVEL_ID) VALUES ('$username ', '$password', '$firstName', '$lastName', '$access', '$level_id')";
-    $result = $link->query($sql);
-    echo $result;
-    mysqli_free_result($result);
+    addUserInDb($link);
 }
 ?>
 
@@ -68,7 +38,7 @@ if (array_key_exists("addUser", $_POST)) {
   </head>
   <body>
 
-
+    <h1> Pannello di AMMINISTRAZIONE</h1>
 
     <!--- FORM PER AGGIUNGERE UTENTI -->
   	<form method="post">
