@@ -17,7 +17,7 @@ function redirectToCorrectPage(){
 
 //verifica se l'utente si è loggato con credenziali appropriate a visualizzare la pagina
 function verifyPermission($level) {
-  if (array_key_exists("id", $_SESSION) and $_SESSION['level_id'] == $level) {
+  if (array_key_exists("id", $_SESSION) and $_SESSION['level_id'] >= $level) {
       echo "<a href='index.php?logout=1'>Log out</a></p>";
   } else {
       header("Location: index.php");

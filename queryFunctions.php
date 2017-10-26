@@ -15,7 +15,7 @@ function showDatabaseUsers($link) {
       </tr>";
 
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['FIRSTNAME']."</td><td>".$row['LASTNAME']."</td><td>".$row['ACCESS']."</td><td>".$row['LEVEL_ID']."</td><td>".$row['ID']."</td></tr>";
+      $html = $html . "<tr><td><a target='_blank' href='userProfile.php?userProfileId=".$row['ID']."'>".$row['USERNAME']."</a></td><td>".$row['FIRSTNAME']."</td><td>".$row['LASTNAME']."</td><td>".$row['ACCESS']."</td><td>".$row['LEVEL_ID']."</td><td>".$row['ID']."</td></tr>";
   }
   $html = $html . "</table>";
   mysqli_free_result($result);
@@ -172,7 +172,7 @@ function performLogin($link) {
               setcookie("id", $row['ID'], time() + 60 * 60 * 24 * 365);
               setcookie("level_id", $row['LEVEL_ID'], time() + 60 * 60 * 24 * 365);
           }
-          writeDatabaseLog($link, $row['USERNAME'].": Login nel sistema");
+          writeDatabaseLog($link, "Login nel sistema");
           if(!(intval($_SESSION['is_working'])==0)){
             redirectToWorkPage();
           } else {

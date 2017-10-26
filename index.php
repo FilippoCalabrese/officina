@@ -7,6 +7,7 @@ include ('connection.php');
 session_start();
 $error = "";
 if (array_key_exists("logout", $_GET)) {
+    writeDatabaseLog($link, "Logout dal sistema");
     session_unset();
     setcookie("id", "", time() - 60 * 60);
   	setcookie("level_id", "", time() - 60 * 60);
