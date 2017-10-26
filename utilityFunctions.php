@@ -36,4 +36,10 @@ function checkCookies(){
 
 
 
+//stampa la singola riga della tabella dei log.
+function printLogTable($row) {
+    $html = $html."<tr><td>".$row['LABEL']."</td><td>".$row['TIMESTRAP']."</td><td>".$row['IP_ADDRESS']."</td></tr>";
+  return $html;
+}
+
 ?>

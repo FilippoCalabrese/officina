@@ -239,4 +239,29 @@ function countsHours($link) {
   $result = mysqli_query($link, $query);
   mysqli_free_result($result);
 }
+
+
+
+/*
+* Recupera le informazioni dell'utente dal database e restituisce la row
+* contenente le informazioni
+*/
+function fetchSelectedUserData($link) {
+  $query = "SELECT * FROM USERS WHERE ID = '" . $_GET['userProfileId'] . "'";
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_array($result);
+  return $row;
+}
+
+
+
+/*
+* Recupera tutti i log presenti nella tabella relativi all'utente desiderato.
+* Restituisce la row contenente le informazioni
+*/
+function fetchDatabaseLogData($link, $id){
+  $query = "SELECT * FROM ACTIVITIES WHERE USERID = '".$id."'";
+  $result = mysqli_query($link, $query);
+  return $result;
+}
  ?>
