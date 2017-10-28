@@ -4,7 +4,7 @@
 */
 function showDatabaseUsers($link) {
   $result = mysqli_query($link, "SELECT * FROM USERS");
-  $html = "<table border='1'>
+  $html = "<table border='1' id='table1'>
       <tr>
       <th>USERNAME</th>
       <th>NOME</th>
@@ -105,9 +105,8 @@ function addUserInDb($link) {
   $password = md5($_POST['password']);
   $firstName = $_POST['firstname'];
   $lastName = $_POST['lastname'];
-  $access = $_POST['access'];
   $level_id = $_POST['level_id'];
-  $sql = "INSERT INTO USERS (USERNAME, PASSWORD, FIRSTNAME, LASTNAME, ACCESS, LEVEL_ID) VALUES ('$username ', '$password', '$firstName', '$lastName', '$access', '$level_id')";
+  $sql = "INSERT INTO USERS (USERNAME, PASSWORD, FIRSTNAME, LASTNAME, LEVEL_ID) VALUES ('$username ', '$password', '$firstName', '$lastName', '$level_id')";
   $result = $link->query($sql);
   echo $result;
   mysqli_free_result($result);
@@ -167,7 +166,7 @@ function performLogin($link) {
           $_SESSION['id'] = $row['ID'];
           $_SESSION['level_id'] = $row['LEVEL_ID'];
           $_SESSION['is_working'] = $row['ISWORKING'];
-
+          updateLastLogin($link);
           if ($_POST['stayLoggedIn'] == '1') {
               setcookie("id", $row['ID'], time() + 60 * 60 * 24 * 365);
               setcookie("level_id", $row['LEVEL_ID'], time() + 60 * 60 * 24 * 365);
@@ -185,6 +184,17 @@ function performLogin($link) {
       $error = "Login fallito. Riprova.";
   }
   return $error;
+}
+
+
+
+/*
+* AGGIORNA DATA ED ORA DELL'ULTIMO LOGIN
+*/
+function updateLastLogin($link) {
+  $query = "UPDATE USERS SET ACCESS = NOW() WHERE ID=".$_SESSION['id'];
+  $result = mysqli_query($link, $query);
+  mysqli_free_result($result);
 }
 
 
@@ -236,6 +246,9 @@ function countsHours($link) {
   $hours = $_POST['hours'] + $row['WORKED_HOURS'];
   mysqli_free_result($result);
   $query = "UPDATE JOBS SET WORKED_HOURS=" .$hours . " WHERE ID = " .$_SESSION['is_working'];
+  $result = mysqli_query($link, $query);
+  mysqli_free_result($result);
+  $query = "INSERT INTO JOBS_TIME(USER_ID, JOB_ACTIVITY_ID, TIME) VALUES (".$_SESSION['id'].", ".$_SESSION['is_working'].", ".  $_POST['hours'].")";
   $result = mysqli_query($link, $query);
   mysqli_free_result($result);
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: shareddb1d.hosting.stackcp.net
--- Creato il: Ott 15, 2017 alle 11:41
+-- Creato il: Ott 26, 2017 alle 09:43
 -- Versione del server: 10.1.14-MariaDB
 -- Versione PHP: 5.6.30
 
@@ -30,7 +30,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `ACTIVITIES` (
   `ID` int(11) NOT NULL,
-  `LABEL` varchar(255) NOT NULL
+  `LABEL` varchar(255) NOT NULL,
+  `TIMESTRAP` datetime DEFAULT NULL,
+  `USERID` int(10) DEFAULT NULL,
+  `IP_ADDRESS` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -63,7 +66,10 @@ CREATE TABLE `JOBS` (
   `OPENED_AT` date DEFAULT NULL,
   `CLOSED_AT` date DEFAULT NULL,
   `ESTIMATED_TIME` int(11) NOT NULL,
-  `DELIVERY` date NOT NULL
+  `DELIVERY` date NOT NULL,
+  `WORKED_HOURS` int(10) DEFAULT '0',
+  `PRIORITY` int(10) DEFAULT '0',
+  `STATUS` int(10) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -90,20 +96,8 @@ CREATE TABLE `JOBS_TIME` (
   `ID` int(11) NOT NULL,
   `USER_ID` int(11) NOT NULL,
   `JOB_ACTIVITY_ID` int(11) NOT NULL,
-  `TIME` int(11) NOT NULL,
-  `CREATD_AT` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `LEVELS`
---
-
-CREATE TABLE `LEVELS` (
-  `ID` int(11) NOT NULL,
-  `LABEL` varchar(255) NOT NULL,
-  `VALUE` int(11) NOT NULL
+  `TIME` int(10) DEFAULT NULL,
+  `CREATED_AT` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -119,7 +113,8 @@ CREATE TABLE `USERS` (
   `FIRSTNAME` varchar(255) NOT NULL,
   `LASTNAME` varchar(255) NOT NULL,
   `ACCESS` date NOT NULL,
-  `LEVEL_ID` int(11) NOT NULL
+  `LEVEL_ID` int(11) NOT NULL,
+  `ISWORKING` int(10) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -157,12 +152,6 @@ ALTER TABLE `JOBS_TIME`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Indici per le tabelle `LEVELS`
---
-ALTER TABLE `LEVELS`
-  ADD PRIMARY KEY (`ID`);
-
---
 -- Indici per le tabelle `USERS`
 --
 ALTER TABLE `USERS`
@@ -176,7 +165,7 @@ ALTER TABLE `USERS`
 -- AUTO_INCREMENT per la tabella `ACTIVITIES`
 --
 ALTER TABLE `ACTIVITIES`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT per la tabella `ASSIGNED_JOBS`
 --
@@ -186,7 +175,7 @@ ALTER TABLE `ASSIGNED_JOBS`
 -- AUTO_INCREMENT per la tabella `JOBS`
 --
 ALTER TABLE `JOBS`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT per la tabella `JOBS_ACTIVITIES`
 --
@@ -196,17 +185,12 @@ ALTER TABLE `JOBS_ACTIVITIES`
 -- AUTO_INCREMENT per la tabella `JOBS_TIME`
 --
 ALTER TABLE `JOBS_TIME`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT per la tabella `LEVELS`
---
-ALTER TABLE `LEVELS`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT per la tabella `USERS`
 --
 ALTER TABLE `USERS`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;COMMIT;
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

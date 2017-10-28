@@ -18,7 +18,12 @@ function redirectToCorrectPage(){
 //verifica se l'utente si è loggato con credenziali appropriate a visualizzare la pagina
 function verifyPermission($level) {
   if (array_key_exists("id", $_SESSION) and $_SESSION['level_id'] >= $level) {
-      echo "<a href='index.php?logout=1'>Log out</a></p>";
+      echo "<nav class='navbar navbar-dark bg-dark'>
+                <a class='navbar-brand' style='color: white; font-weight: bold;'>BT AUTO</a>
+                  <ul class='navbar-nav'>
+                    <li class='nav-link'><a href='index.php?logout=1'>Log out</a></li>
+                  </ul>
+                </nav>";
   } else {
       header("Location: index.php");
   }

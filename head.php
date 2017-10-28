@@ -1,18 +1,3 @@
-<?php
-include('connection.php');
-include('queryFunctions.php');
-include('utilityFunctions.php');
-
-session_start();
-
-checkCookies();
-verifyPermission(10);
-
-if (array_key_exists("submitHours", $_POST)) {
-    countsHours($link);
-}
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,26 +6,6 @@ if (array_key_exists("submitHours", $_POST)) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
-  <link rel="stylesheet" type="text/css" href="css/main.css">
   <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
-  <script type="text/javascript">
-    $(document).ready( function () {
-    $('table').dataTable();
-    } );
-  </script>
-  <title>Il Tuo Lavoro Attuale</title>
+
 </head>
-
-  <body>
-    <div class="container" style="text-align: center;">
-        <?php verifyUserIsWorking($link); ?>
-        <br>
-
-        <form method="post">
-        	<input type="text" name="hours" placeholder="Numero di ore da conteggiare">
-          <input type="submit" class="btn btn-success" name="submitHours" value="Conteggia Ore!">
-        </form>
-    </div>
-  </body>
-
-</html>
