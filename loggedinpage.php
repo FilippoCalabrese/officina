@@ -6,6 +6,7 @@ session_start();
 
 checkCookies();
 verifyPermission(10);
+
 ?>
 
 
@@ -31,7 +32,7 @@ verifyPermission(10);
 
             <h1> Pannello UTENTE</h1>
 
-            <?php echo showDatabaseWorks($link); ?>
+            <?php echo showMyWorks($link); ?>
       </div>
     </div>
   </body>

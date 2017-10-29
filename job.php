@@ -2,6 +2,7 @@
 include('connection.php');
 include('queryFunctions.php');
 include('utilityFunctions.php');
+session_start();
 if(isset($_GET['jobId'])){
 
   $jobRow = fetchSelectedJobData($link);
@@ -17,7 +18,6 @@ if(isset($_GET['jobId'])){
 } else {
   header("Location: index.php");
 }
-session_start();
 
 checkCookies();
 verifyPermission(10);
@@ -44,18 +44,22 @@ if (array_key_exists("submitHours", $_POST)) {
 </head>
   <body>
     <div class="container">
-      <h1>SCHEDA DEL LAVORO: <?php echo $description ?></h1>
-      <br>
-      <p>DESCRIZIONE: <?php echo $description; ?></p>
-      <p>NOTE: <?php echo $note; ?></p>
-      <p>DATA DI CREAZIONE: <?php echo $created_at; ?></p>
-      <p>TEMPO STIMATO: <?php echo $estimated_time; ?></p>
-      <p>DATA DI CONSEGNA: <?php echo $delivery; ?></p>
-      <p>TOTALE ORE LAVORATE: <?php echo $worked_hours; ?></p>
-      <p>CONTATORE PARZIALE ORE:</p>
-      <table>
-        <?php //TODO sparare le singole righe delle ore lavorate ?>
-      </table>
+      <div class="row">
+        <div class="col-md-12">
+          <h1>SCHEDA DEL LAVORO: <?php echo $description ?></h1>
+          <br>
+          <p>DESCRIZIONE: <?php echo $description; ?></p>
+          <p>NOTE: <?php echo $note; ?></p>
+          <p>DATA DI CREAZIONE: <?php echo $created_at; ?></p>
+          <p>TEMPO STIMATO: <?php echo $estimated_time; ?></p>
+          <p>DATA DI CONSEGNA: <?php echo $delivery; ?></p>
+          <p>TOTALE ORE LAVORATE: <?php echo $worked_hours; ?></p>
+          <p>CONTATORE PARZIALE ORE:</p>
+          <table>
+            <?php //TODO sparare le singole righe delle ore lavorate ?>
+          </table>
+        </div>
+      </div>
     </div>
 
   </body>

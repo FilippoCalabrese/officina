@@ -42,8 +42,40 @@ function showDatabaseWorks($link) {
       <th>ID</th>
       </tr>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td>".$row['DESCRIPTION']."</td><td>".$row['NOTE']."</td><td>".$row['CREATED_AT']."</td><td>".$row['UPDATED_AT']."</td><td>".$row['OPENED_AT']."</td><td>".$row['CLOSED_AT']."</td><td>".$row['ESTIMATED_TIME']."</td><td>";
-      $html = $html . $row['DELIVERY'] . "</td><td>".$row['ID']."</td></tr>";
+      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['NOTE']."</td><td>".$row['CREATED_AT']."</td><td>".$row['UPDATED_AT']."</td><td>".$row['OPENED_AT']."</td><td>".$row['CLOSED_AT'];
+      $html = $html ."</td><td>".$row['ESTIMATED_TIME']."</td><td>" . $row['DELIVERY'] . "</td><td>".$row['ID']."</td></tr>";
+  }
+  $html = $html . "</table>";
+  mysqli_free_result($result);
+  mysqli_close($con);
+  return $html;
+
+}
+
+
+
+/*
+* MOSTRA I LAVORI ASSEGNATI
+*/
+function showMyWorks($link) {
+  $sql = "SELECT * FROM JOBS WHERE ID IN (SELECT JOB_ID FROM ASSIGNED_JOBS WHERE USER_ID =".$_SESSION['id'].")";
+  $result = mysqli_query($link, $sql);
+  $html = "<table border='1'>
+      <tr>
+      <th>DESCRIZIONE</th>
+      <th>NOTE</th>
+      <th>DATA DI CREAZIONE</th>
+      <th>ULTIMO AGGIORNAMENTO</th>
+      <th>DATA DI APERTURA</th>
+      <th>DATA DI CHIUSURA</th>
+      <th>TEMPO STIMATO</th>
+      <th>DATA DI CONSEGNA</th>
+      <th>ID</th>
+      </tr>";
+  while ($row = mysqli_fetch_array($result)) {
+      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['NOTE']."</td><td>".$row['CREATED_AT']."</td><td>".$row['UPDATED_AT']."</td><td>".$row['OPENED_AT']."</td><td>";
+      $html = $html .$row['CLOSED_AT']."</td><td>".$row['ESTIMATED_TIME']."</td><td>".$row['DELIVERY'] . "</td><td><form method='post' action='index.php'>
+        <button type='submit' class='btn btn-success' name='taken' value=".$row['ID'].">Inizia</button></form></td></tr>";
   }
   $html = $html . "</table>";
   mysqli_free_result($result);
@@ -63,6 +95,17 @@ function deleteUserFromDb($link) {
   $result = $link->query($sql);
   mysqli_free_result($result);
   writeDatabaseLog($link, "cancellato utente ".$userToDelete);
+}
+
+
+
+/*
+* COMINCIA L'ATTIVITÀ PER L'UTENTE CORRENTE
+*/
+function updateMyWork($link) {
+  $sql = "UPDATE USERS SET ISWORKING = ".$_POST['taken']." WHERE ID =".$_SESSION['id'];
+  $result = $link->query($sql);
+  mysqli_free_result($result);
 }
 
 
@@ -93,6 +136,21 @@ function insertNewWorkInDb($link){
   echo $result;
   mysqli_free_result($result);
   writeDatabaseLog($link, "aggiunto nuovo lavoro");
+}
+
+
+
+/*
+*
+*/
+function assignJobToUser($link){
+  $jobId = $_POST['jobId'];
+  $user_id = $_POST['user_id'];
+  $priority = $_POST['priority'];
+  $sql = "INSERT INTO ASSIGNED_JOB (JOB_ID, USER_ID, PRIORITY) VALUES (".$jobId.", ".$user_id.", ".$priority.")";
+  $result = $link->query($sql);
+  mysql_free_result($result);
+  writeDatabaseLog($link, "Assegnato un Job all'utente");
 }
 
 
@@ -268,6 +326,27 @@ function fetchSelectedUserData($link) {
 
 
 
+
+/*
+* Recupera le informazioni dell'utente dal database e restituisce la row
+* contenente le informazioni
+*/
+function fetchSelectedJobData($link) {
+  $query = "SELECT * FROM JOBS WHERE ID = " . $_GET['jobId'];
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_array($result);
+  return $row;
+}
+
+function fetchJobActivityData($link, $id) {
+  $query = "SELECT * FROM JOBS_ACTIVITIES WHERE ID = " . $id;
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_array($result);
+  return $row;
+}
+
+
+
 /*
 * Recupera tutti i log presenti nella tabella relativi all'utente desiderato.
 * Restituisce la row contenente le informazioni
@@ -277,4 +356,27 @@ function fetchDatabaseLogData($link, $id){
   $result = mysqli_query($link, $query);
   return $result;
 }
+
+
+
+/*
+*CHIUDE IL LAVORO A CUI L'UTENTE STA ATTUALMENTE LAVORANDO
+*/
+function updateWork($link) {
+  $sql = "UPDATE USERS SET ISWORKING = 0 WHERE ID =".$_SESSION['id'];
+  $result = $link->query($sql);
+}
+
+
+
+/*
+*CHIUDE IL LAVORO A CUI L'UTENTE STA ATTUALMENTE LAVORANDO
+*/
+function closeWork($link) {
+  $sql = "UPDATE JOBS SET CLOSED_AT = NOW() WHERE ID =".$_SESSION['is_working'];
+  $result = $link->query($sql);
+  mysql_free_result($result);
+}
+
+
  ?>

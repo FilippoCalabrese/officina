@@ -6,6 +6,16 @@ include ('connection.php');
 
 session_start();
 $error = "";
+if(array_key_exists("taken", $_POST)) {
+  updateMyWork($link);
+  header('Location: index.php');
+}
+
+if (array_key_exists("closeWork", $_POST)) {
+    updateWork($link);
+    closeWork($link);
+}
+
 if (array_key_exists("logout", $_GET)) {
     writeDatabaseLog($link, "Logout dal sistema");
     session_unset();
@@ -46,7 +56,6 @@ if (array_key_exists("submit", $_POST)) {
 
     <h1>bt auto - login al sistema gestionale</h1>
 
-
         <form method="post">
       <div class="form-group">
         <label for="username">Email address</label>
@@ -65,7 +74,6 @@ if (array_key_exists("submit", $_POST)) {
       </div>
       <input type="submit" name="submit" value="Log In!" class="btn btn-success">
     </form>
-
 
 
   </div>
