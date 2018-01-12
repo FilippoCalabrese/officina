@@ -88,7 +88,7 @@ function showCompletedWorks($link) {
 * MOSTRA I LAVORI ASSEGNATI
 */
 function showMyWorks($link) {
-  $sql = "SELECT * FROM JOBS WHERE CLOSED_AT IS NULL AND ID IN (SELECT JOB_ID FROM ASSIGNED_JOBS WHERE USER_ID LIKE '%". $_SESSION['id'] ."%' ) OR FORALL=1";
+  $sql = "SELECT * FROM JOBS WHERE CLOSED_AT IS NULL AND ID IN (SELECT JOB_ID FROM ASSIGNED_JOBS WHERE USER_ID LIKE '%". $_SESSION['id'] ."%' ) OR FORALL=1 AND CLOSED_AT IS NULL";
   $result = mysqli_query($link, $sql);
   $html = "<table class='table table-stripped'>
       <tr>
@@ -136,7 +136,7 @@ function updateMyWork($link) {
   $sql = "UPDATE USERS SET ISWORKING = ".$_POST['taken']." WHERE id =".$_SESSION['id'];
   $result = $link->query($sql);
 
-  $sql = "UPDATE JOBS SET OPENED_AT = NOW() WHERE ID =".$_POST['taken'];
+  $sql = "UPDATE JOBS SET OPENED_AT = DATE_ADD(NOW(), INTERVAL 8 HOUR) WHERE ID =".$_POST['taken'];
   $result = $link->query($sql);
   writeDatabaseLog($link, "Ha cominciato il lavoro con id =".$_POST['taken']);
   header('Location: index.php');
@@ -204,7 +204,7 @@ function addUserInDb($link) {
 * SCRIVE UN MESSAGGIO NELLA TABELLA DI LOG DEL DATABASE
 */
 function writeDatabaseLog($link, $message) {
-  $sql = "INSERT INTO ACTIVITIES (LABEL, TIMESTRAP, USERID, IP_ADDRESS) VALUES ('".$message."', NOW(),".$_SESSION['id'].", '".getUserIP()."')";
+  $sql = "INSERT INTO ACTIVITIES (LABEL, TIMESTRAP, USERID, IP_ADDRESS) VALUES ('".$message."', DATE_ADD(NOW(), INTERVAL 8 HOUR),".$_SESSION['id'].", '".getUserIP()."')";
   $result = $link->query($sql);
   mysqli_free_result($result);
 }
@@ -278,7 +278,7 @@ function performLogin($link) {
 * AGGIORNA DATA ED ORA DELL'ULTIMO LOGIN
 */
 function updateLastLogin($link) {
-  $query = "UPDATE USERS SET ACCESS = NOW() WHERE ID=".$_SESSION['id'];
+  $query = "UPDATE USERS SET ACCESS = DATE_ADD(NOW(), INTERVAL 8 HOUR) WHERE ID=".$_SESSION['id'];
   $result = mysqli_query($link, $query);
   mysqli_free_result($result);
 }
@@ -397,7 +397,7 @@ function updateWork($link) {
 *CHIUDE IL LAVORO A CUI L'UTENTE STA ATTUALMENTE LAVORANDO
 */
 function closeWork($link) {
-  $sql = "UPDATE JOBS SET CLOSED_AT = NOW() WHERE ID =".$_SESSION['is_working'];
+  $sql = "UPDATE JOBS SET CLOSED_AT = DATE_ADD(NOW(), INTERVAL 8 HOUR) WHERE ID =".$_SESSION['is_working'];
   $result = $link->query($sql);
   writeDatabaseLog($link, "Completato il lavoro attuale");
   countWorkSession($link);
@@ -420,7 +420,7 @@ function countWorkSession($link) {
   $row = mysqli_fetch_array($result);
   $jobId = $row['ID'];
   $myName = $_SESSION['username'];
-  $sql = "UPDATE `WORK_SESSION` SET `FINISH` = NOW() WHERE USERNAME ='".$_SESSION['username']."' AND WORK_ID = ".$jobId." AND FINISH IS NULL";
+  $sql = "UPDATE `WORK_SESSION` SET `FINISH` = DATE_ADD(NOW(), INTERVAL 8 HOUR) WHERE USERNAME ='".$_SESSION['username']."' AND WORK_ID = ".$jobId." AND FINISH IS NULL";
   $result = $link->query($sql);
   $sql = "UPDATE JOBS SET SUSPENDED = 1 WHERE ID =".$jobId;
   $result = $link->query($sql);
@@ -434,9 +434,9 @@ function unlockWork($link) {
   $jobId = $row['ID'];
   $sql = "UPDATE JOBS SET SUSPENDED = 0 WHERE ID =".$jobId;
   $result = $link->query($sql);
-  $sql = "UPDATE JOBS SET UPDATED_AT = NOW() WHERE ID =".$jobId;
+  $sql = "UPDATE JOBS SET UPDATED_AT = DATE_ADD(NOW(), INTERVAL 8 HOUR) WHERE ID =".$jobId;
   $result = $link->query($sql);
-    $sql = "INSERT INTO `work_session`(`WORK_ID`, `USERNAME`) VALUES (".$jobId.", '".$_SESSION['username']."')";
+    $sql = "INSERT INTO `WORK_SESSION`(`START`,`WORK_ID`, `USERNAME`) VALUES (DATE_ADD(NOW(), INTERVAL 8 HOUR), ".$jobId.", '".$_SESSION['username']."')";
     $result = $link->query($sql);
     echo($sql);
   writeDatabaseLog($link, "Ricominciato il lavoro con id = ".$jobId);
@@ -464,7 +464,7 @@ function showWorkSessions($link) {
       <th>ORA DI FINE</th>
       </tr>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['start']."</td><td>".$row['finish']."</td>";
+      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['START']."</td><td>".$row['FINISH']."</td></tr>";
   }
   $html = $html . "</table>";
   mysqli_free_result($result);
