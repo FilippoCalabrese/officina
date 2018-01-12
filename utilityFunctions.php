@@ -47,4 +47,5 @@ function printLogTable($row) {
   return $html;
 }
 
+
 ?>

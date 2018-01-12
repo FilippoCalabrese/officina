@@ -44,91 +44,227 @@ if (array_key_exists("addUser", $_POST)) {
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
-  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.0/b-html5-1.5.0/b-print-1.5.0/r-2.2.1/sc-1.4.3/datatables.min.css"/>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.0/b-html5-1.5.0/b-print-1.5.0/r-2.2.1/sc-1.4.3/datatables.min.js"></script>
+
+
   <script type="text/javascript">
     $(document).ready( function () {
-    $('table').dataTable();
+    $('table').dataTable({
+        responsive: true,
+        "scrollX": true,
+        dom: "Bfrtip",
+        buttons: [
+            'excel',
+            'print',
+            'pdf'
+        ]
+    });
     } );
   </script>
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
 </head>
 
 <body>
 <div class="container" style="background-color: white;">
-    <section id="userSection">
-      <h2 style="margin-bottom: 15px;">GESTIONE UTENTI</h2>
-      <div class="row">
-        <div class="col-md-4">
-          <!--- FORM PER AGGIUNGERE UTENTI -->
-        	<form method="post">
-        		<h3>inserisci un nuovo utente</h3>
-        		<input type="text" name="username" placeholder="Username"><br>
-            <input type="text" name="password" placeholder="Password"><br>
-            <input type="text" name="firstname" placeholder="Nome"><br>
-            <input type="text" name="lastname" placeholder="Cognome"><br> 
-            <input type="text" name="level_id" placeholder="Level ID"><br>
-            <input class="btn btn-success" type="submit" name="addUser" value="Aggiungi Utente!"><br>
-        	</form>
-        	<br>
-        </div>
+  <section>
+    <div class="row">
+      <div class="col-md-12">
+        <br>
+        <ul class="nav nav-pills" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="utenti-tab" data-toggle="tab" href="#utenti" role="tab" aria-controls="utenti" aria-selected="true">Utenti</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="lavori-tab" data-toggle="tab" href="#lavori" role="tab" aria-controls="lavori" aria-selected="false">Lavori</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="utenti" role="tabpanel" aria-labelledby="utenti-tab">
 
 
+            <section id="userSection">
+              <div class="row">
+                <div class="col-md-4">
+                  <h1 style="margin-bottom: 15px;">GESTIONE UTENTI</h1>
+                </div>
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_utenti" style="margin-top: 10px;">+ Nuovo Utente</button>
+                </div>
+              </div>
 
-        <div class="col-md-8">
-          <!--- UTENTI PRESENTI NEL SISTEMA -->
-        	<h3>utenti presenti nel sistema</h3>
-            <?php
-              echo showDatabaseUsers($link);
-            ?>
-          <br>
-          <hr>
-          <!--- FORM PER CANCELLARE UTENTI -->
-        	<form method="post">
-        		<h3>cancella utente. Attenzione: Non verrà chiesta conferma</h3>
-        		<input type="text" name="deleteUsername" placeholder="Username">
-            <input type="submit" name="deleteUser" class="btn btn-success" value="Rimuovi Utente!">
-        	</form>
-        	<br>
-        </div>
-      </div> <!--- row -->
-      <hr>
-    </section>
+              <div class="row">
+                <div class="col-md-12">
+                  <!-- Modal -->
+                  <div id="modal_utenti" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                          <!-- Modal content-->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4>Aggiungi Utente</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+
+                          <form method="post">
+                            <div class="form-group">
+                              <label for="description">Username</label>
+                              <input type="text" name="username" class="form-control" id="username" aria-describedby="emailHelp" placeholder="username">
+                            </div>
+                            <div class="form-group">
+                              <label for="password">Password</label>
+                              <input type="text" name="password" class="form-control" id="password" placeholder="password">
+                            </div>
+                            <div class="form-group">
+                              <label for="firstname">Nome</label>
+                              <input type="text" name="firstname" class="form-control" id="firstname" placeholder="Nome">
+                            </div>
+                            <div class="form-group">
+                              <label for="lastname">Cognome</label>
+                              <input type="text" name="lastname" class="form-control" id="lastname" placeholder="Cognome">
+                            </div>
+                            <div class="form-group">
+                              <label for="level_id">Livello User (10 utente, 100 amministratore)</label>
+                              <select class="form-control" id="level_id" name="level_id">
+                                <option>10</option>
+                                <option>100</option>
+                              </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" name="addUser">Submit</button>
+                          </form>
+                          <br>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
 
 
-    <section id="jobSection" style="margin-top: 60px;">
-      <h2 style="margin-bottom: 15px;">GESTIONE LAVORI</h2>
-      <div class="row">
-        <div class="col-md-12">
-          <!--- MOSTRA I LAVORI PRESENTI NEL SISTEMA -->
-        	<h3>lavori presenti nel sistema</h3>
-            <?php echo showDatabaseWorks($link); ?>
-            <!--- FORM PER CANCELLARE JOB -->
-          	<form method="post">
-          		<h3 style="margin-top: 30px;">cancella lavoro. Attenzione: non verrà chiesta conferma</h3>
-          		<input type="text" name="deleteJob" placeholder="ID">
-              <input class="btn btn-success" type="submit" name="deleteJobSubmit" value="Rimuovi JOB!">
-          	</form>
-            <hr>
+                  <!--- UTENTI PRESENTI NEL SISTEMA -->
+                	<h3>utenti presenti nel sistema</h3>
+                    <?php
+                      echo showDatabaseUsers($link);
+                    ?>
+                  <br>
+                  <hr>
+
+
+                  <!--- FORM PER CANCELLARE UTENTI -->
+                	<form method="post">
+                		<h3>cancella utente. Attenzione: Non verrà chiesta conferma</h3>
+                		<input type="text" name="deleteUsername" placeholder="Username">
+                    <input type="submit" name="deleteUser" class="btn btn-success" value="Rimuovi Utente!">
+                	</form>
+                	<br>
+                </div>
+              </div> <!--- row -->
+              <hr>
+            </section>
+
+
+          </div>
+          <div class="tab-pane fade" id="lavori" role="tabpanel" aria-labelledby="lavori-tab">
+            <section id="jobSection">
+              <div class="row">
+                <div class="col-md-4">
+                  <h1 style="margin-bottom: 15px;">GESTIONE LAVORI</h1>
+                </div>
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_lavori" style="margin-top: 10px;">+ Nuovo Lavoro</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <!-- Modal -->
+                  <div id="modal_lavori" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                          <!-- Modal content-->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4>Aggiungi un lavoro</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="post">
+                            <div class="form-group">
+                              <label for="description">Descrizione</label>
+                              <input type="text" name="description" class="form-control" id="description" aria-describedby="emailHelp" placeholder="Descrizione">
+                            </div>
+                            <div class="form-group">
+                              <label for="note">Note aggiuntive</label>
+                              <input type="text" name="note" class="form-control" id="note" placeholder="Note Aggiuntive">
+                            </div>
+                            <div class="form-group">
+                              <label for="estimated_time">Tempo stimato</label>
+                              <input type="text" name="estimated_time" class="form-control" id="estimated_time" placeholder="Tempo Stimato">
+                            </div>
+                            <div class="form-group">
+                              <label for="targa">Targa</label>
+                              <input type="text" name="targa" class="form-control" id="Targa" placeholder="Targa">
+                            </div>
+                            <div class="form-group">
+                              <label for="telaio">Telaio</label>
+                              <input type="text" name="telaio" class="form-control" id="telaio" placeholder="Telaio">
+                            </div>
+                            <div class="form-group">
+                              <label for="telaio">ID (separati da spazio) a cui assegnare il lavoro</label>
+                              <input type="text" name="assegna" class="form-control" id="assegna" placeholder="IDs">
+                            </div>
+                            <div class="form-group">
+                              <label for="delivery">Data di consegna</label>
+                              <input type="date" name="delivery" class="form-control" id="delivery" placeholder="">
+                            </div>
+                            <div class="form-group">
+                              <input type="hidden" name="forall" value="0">
+                            </div>
+                            <button type="submit" class="btn btn-primary" name="addJob">Submit</button>
+                          </form>
+
+                          <br>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--- MOSTRA I LAVORI PRESENTI NEL SISTEMA -->
+                	<h3>lavori attivi nel sistema</h3>
+                    <div>
+                    <?php echo showDatabaseWorks($link); ?>
+                    </div>
+                    <!--- FORM PER CANCELLARE JOB -->
+                  	<form method="post">
+                  		<h3 style="margin-top: 30px;">cancella lavoro. Attenzione: non verrà chiesta conferma</h3>
+                  		<input type="text" name="deleteJob" placeholder="ID">
+                      <input class="btn btn-success" type="submit" name="deleteJobSubmit" value="Rimuovi JOB!">
+                  	</form>
+                    <hr>
+                </div>
+              </div>
+
+                <h2 style="margin-bottom: 15px;">LAVORI COMPLETATI DI RECENTE</h2>
+              <div class="row">
+                <div class="col-md-12">
+                  <!--- MOSTRA I LAVORI PRESENTI NEL SISTEMA -->
+                    <?php echo showCompletedWorks($link); ?>
+                    <hr>
+                </div>
+              </div>
+            </section>
+
+
+          </div>
+          <!--- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> --->
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <!--- FORM PER AGGIUNGERE UN LAVORO -->
-        	<form method="post">
-        		<h3>inserisci un nuovo lavoro</h3>
-        		<input type="text" name="description" placeholder="Descrizione del lavoro"><br>
-            <input type="text" name="note" placeholder="Note Per Il Lavoro"><br>
-            <input type="text" name="estimated_time" placeholder="Tempo Stimato"><br>
-            <label for="delivery">Data di consegna: </label>
-            <input type="date" name="delivery"><br>
-            <input class="btn btn-success" type="submit" name="addJob" value="Aggiungi Lavoro!"><br>
-        	</form>
-        </div>
-      </div>
-    </section>
-
-
+    </div>
+  </section>
 
   </body>
 </div>

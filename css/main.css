@@ -5,3 +5,10 @@
 body {
   background-color: #4f4f4f;
 }
+
+table {
+    font-size: 13px;
+}
+.btn-sm {
+  line-height: 0.8 !important;
+}

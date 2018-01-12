@@ -55,9 +55,8 @@ if (array_key_exists("submitHours", $_POST)) {
           <p>DATA DI CONSEGNA: <?php echo $delivery; ?></p>
           <p>TOTALE ORE LAVORATE: <?php echo $worked_hours; ?></p>
           <p>CONTATORE PARZIALE ORE:</p>
-          <table>
-            <?php //TODO sparare le singole righe delle ore lavorate ?>
-          </table>
+
+          <?php echo showWorkSessions($link); ?>
         </div>
       </div>
     </div>

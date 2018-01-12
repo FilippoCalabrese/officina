@@ -6,10 +6,6 @@ include ('connection.php');
 
 session_start();
 $error = "";
-if(array_key_exists("taken", $_POST)) {
-  updateMyWork($link);
-  header('Location: index.php');
-}
 
 if (array_key_exists("closeWork", $_POST)) {
     updateWork($link);

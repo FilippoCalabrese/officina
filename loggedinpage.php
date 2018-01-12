@@ -7,6 +7,19 @@ session_start();
 checkCookies();
 verifyPermission(10);
 
+// aggiunge un lavoro se è stato compilato il form
+if (array_key_exists("addJob", $_POST)) {
+    insertNewWorkInDb($link);
+}
+
+
+if(array_key_exists("taken", $_POST)) {
+  $_SESSION['is_working'] = intval($_POST['taken']);
+  updateMyWork($link);
+
+  header("Location: work.php");
+}
+
 ?>
 
 
@@ -34,6 +47,52 @@ verifyPermission(10);
 
             <?php echo showMyWorks($link); ?>
       </div>
+        <hr>
+        <br>
+    <section id="jobSection" style="margin-top: 60px; padding-bottom: 40px;">
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary" data-toggle="collapse" data-target="#demo">Aggiungi un lavoro</button>
+
+          <div id="demo" class="collapse">
+            <br>
+            <br>
+            <p><i class="fa fa-info-circle" aria-hidden="true"></i><i>I lavori aggiunti dal personale saranno accessibili a tutto lo staff dell'officina</i></p>
+            <form method="post">
+              <div class="form-group">
+                <label for="description">Descrizione</label>
+                <input type="text" name="description" class="form-control" id="description" aria-describedby="emailHelp" placeholder="Descrizione">
+              </div>
+              <div class="form-group">
+                <label for="note">Note aggiuntive</label>
+                <input type="text" name="note" class="form-control" id="note" placeholder="Note Aggiuntive">
+              </div>
+              <div class="form-group">
+                <label for="estimated_time">Tempo stimato</label>
+                <input type="text" name="estimated_time" class="form-control" id="estimated_time" placeholder="Tempo Stimato">
+              </div>
+              <div class="form-group">
+                <label for="targa">Targa</label>
+                <input type="text" name="targa" class="form-control" id="Targa" placeholder="Targa">
+              </div>
+              <div class="form-group">
+                <label for="telaio">Telaio</label>
+                <input type="text" name="telaio" class="form-control" id="telaio" placeholder="Telaio">
+              </div>
+              <div class="form-group">
+                <label for="delivery">Data di consegna</label>
+                <input type="date" name="delivery" class="form-control" id="delivery" placeholder="">
+              </div>
+              <div class="form-group">
+                <input type="hidden" name="forall" value="1">
+              </div>
+              <button type="submit" class="btn btn-success" name="addJob">Aggiungi</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
     </div>
   </body>
 </html>

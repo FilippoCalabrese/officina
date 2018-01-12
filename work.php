@@ -4,18 +4,25 @@ include('queryFunctions.php');
 include('utilityFunctions.php');
 
 session_start();
-print_r($_POST);
 checkCookies();
 verifyPermission(10);
-
-if (array_key_exists("submitHours", $_POST)) {
-    countsHours($link);
-}
 
 if (array_key_exists("closeWork", $_POST)) {
     updateWork($link);
     closeWork($link);
+    //TODO: inserire conteggio ore
+    header("Location: index.php");
 }
+
+if(array_key_exists("suspendWork", $_POST)){
+  countWorkSession($link);
+}
+
+if(array_key_exists("restartWork", $_POST)){
+  unlockWork($link);
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -42,12 +49,10 @@ if (array_key_exists("closeWork", $_POST)) {
         <br>
 
         <form method="post">
-        	<input type="text" name="hours" placeholder="Numero di ore da conteggiare">
-          <input type="submit" class="btn btn-success" name="submitHours" value="Conteggia Ore!">
+          <input type="submit" class="btn btn-warning" name="closeWork" value="Chiudi" style="margin-bottom: 30px;">
         </form>
-
         <form method="post">
-          <input type="submit" class="btn btn-warning" name="closeWork" value="Chiudi il lavoro" style="margin-bottom: 30px;">
+          <?php echo showCorrectButton($link); ?>
         </form>
     </div>
   </body>
