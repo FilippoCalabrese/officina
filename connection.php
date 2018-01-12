@@ -1,6 +1,6 @@
 <?php
 
-    $link = mysqli_connect("localhost", "officina", "Officina2017A1@", "officina");
+    $link = mysqli_connect("localhost", "root", "root", "officina");
 
     if (mysqli_connect_error()) {
 

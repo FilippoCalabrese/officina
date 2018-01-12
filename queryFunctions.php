@@ -135,13 +135,12 @@ function deleteUserFromDb($link) {
 function updateMyWork($link) {
   $sql = "UPDATE USERS SET ISWORKING = ".$_POST['taken']." WHERE id =".$_SESSION['id'];
   $result = $link->query($sql);
-  //mysqli_free_result($result);
 
   $sql = "UPDATE JOBS SET OPENED_AT = NOW() WHERE ID =".$_POST['taken'];
   $result = $link->query($sql);
-  //mysql_free_result($result);
   writeDatabaseLog($link, "Ha cominciato il lavoro con id =".$_POST['taken']);
   header('Location: index.php');
+  unlockWork($link);
 }
 
 
@@ -401,6 +400,7 @@ function closeWork($link) {
   $sql = "UPDATE JOBS SET CLOSED_AT = NOW() WHERE ID =".$_SESSION['is_working'];
   $result = $link->query($sql);
   writeDatabaseLog($link, "Completato il lavoro attuale");
+  countWorkSession($link);
 }
 
 /*
@@ -419,10 +419,8 @@ function countWorkSession($link) {
   $result = $link->query($sql);
   $row = mysqli_fetch_array($result);
   $jobId = $row['ID'];
-  $start = strtotime($row['UPDATED_AT']);
-  $finish = ($start -strtotime("now"))/3600;
   $myName = $_SESSION['username'];
-  $sql = "INSERT INTO `WORK_SESSION`(`WORK_ID`, `USERNAME`, `WORKED_TIME`) VALUES (".$jobId.", '".$myName."',".$finish.")";
+  $sql = "UPDATE `WORK_SESSION` SET `FINISH` = NOW() WHERE USERNAME ='".$_SESSION['username']."' AND WORK_ID = ".$jobId." AND FINISH IS NULL";
   $result = $link->query($sql);
   $sql = "UPDATE JOBS SET SUSPENDED = 1 WHERE ID =".$jobId;
   $result = $link->query($sql);
@@ -438,6 +436,9 @@ function unlockWork($link) {
   $result = $link->query($sql);
   $sql = "UPDATE JOBS SET UPDATED_AT = NOW() WHERE ID =".$jobId;
   $result = $link->query($sql);
+    $sql = "INSERT INTO `work_session`(`WORK_ID`, `USERNAME`) VALUES (".$jobId.", '".$_SESSION['username']."')";
+    $result = $link->query($sql);
+    echo($sql);
   writeDatabaseLog($link, "Ricominciato il lavoro con id = ".$jobId);
 }
 
@@ -459,10 +460,11 @@ function showWorkSessions($link) {
   $html = "<table class='table table-stripped'>
       <tr>
       <th>UTENTE</th>
-      <th>TEMPO LAVORATO</th>
+      <th>ORA DI INIZIO</th>
+      <th>ORA DI FINE</th>
       </tr>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['WORKED_TIME']."</td><td>";
+      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['start']."</td><td>".$row['finish']."</td>";
   }
   $html = $html . "</table>";
   mysqli_free_result($result);
