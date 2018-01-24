@@ -19,9 +19,9 @@ function redirectToCorrectPage(){
 function verifyPermission($level) {
   if (array_key_exists("id", $_SESSION) and $_SESSION['level_id'] >= $level) {
       echo "<nav class='navbar navbar-dark bg-dark'>
-                <a class='navbar-brand' style='color: white; font-weight: bold;'>BT AUTO</a>
+                <a class='navbar-brand' style='color: white; font-weight: bold;'>BT CAR</a>
                   <ul class='navbar-nav'>
-                    <li class='nav-link'><a href='index.php?logout=1'>Log out</a></li>
+                    <liclass='nav-link'><button class='btn btn-danger'><a href='index.php?logout=1'  style='color: black; font-weight: bold'>ESCI</a></button></li>
                   </ul>
                 </nav>";
   } else {

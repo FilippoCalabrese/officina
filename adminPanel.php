@@ -83,8 +83,29 @@ if (array_key_exists("addUser", $_POST)) {
           <li class="nav-item">
             <a class="nav-link" id="lavori-tab" data-toggle="tab" href="#lavori" role="tab" aria-controls="lavori" aria-selected="false">Lavori</a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link" id="ingressi-tab" data-toggle="tab" href="#ingressi" role="tab" aria-controls="ingressi" aria-selected="false">Ingressi e uscite</a>
+          </li>
         </ul>
+
         <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show" id="ingressi" role="tabpanel" aria-labelledby="ingressi-tab">
+
+
+            <section id="userSection">
+              <div class="row">
+                <div class="col-md-4">
+                  <h1 style="margin-bottom: 15px;">INGRESSI ED USCITE</h1>
+                </div>
+              </div>
+
+              <?php echo showEntranceAndExit($link); ?>
+            </section>
+
+
+          </div>
+
           <div class="tab-pane fade show active" id="utenti" role="tabpanel" aria-labelledby="utenti-tab">
 
 
@@ -196,20 +217,8 @@ if (array_key_exists("addUser", $_POST)) {
                               <input type="text" name="description" class="form-control" id="description" aria-describedby="emailHelp" placeholder="Descrizione">
                             </div>
                             <div class="form-group">
-                              <label for="note">Note aggiuntive</label>
-                              <input type="text" name="note" class="form-control" id="note" placeholder="Note Aggiuntive">
-                            </div>
-                            <div class="form-group">
-                              <label for="estimated_time">Tempo stimato</label>
-                              <input type="text" name="estimated_time" class="form-control" id="estimated_time" placeholder="Tempo Stimato">
-                            </div>
-                            <div class="form-group">
                               <label for="targa">Targa</label>
                               <input type="text" name="targa" class="form-control" id="Targa" placeholder="Targa">
-                            </div>
-                            <div class="form-group">
-                              <label for="telaio">Telaio</label>
-                              <input type="text" name="telaio" class="form-control" id="telaio" placeholder="Telaio">
                             </div>
                             <div class="form-group">
                               <label for="telaio">ID (separati da spazio) a cui assegnare il lavoro</label>

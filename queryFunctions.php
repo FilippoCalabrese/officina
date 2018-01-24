@@ -35,17 +35,14 @@ function showDatabaseWorks($link) {
 
       <thead>
       <tr><th>DESCRIZIONE</th>
-      <th>NOTE</th>
       <th>DATA DI APERTURA</th>
-      <th>TEMPO STIMATO</th>
       <th>DATA DI CONSEGNA</th>
       <th>TARGA</th>
-      <th>TELAIO</th>
       <th>ID</th>
       </tr>
       </thead><tbody>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['NOTE']."</td><td>".$row['OPENED_AT']."</td><td>".$row['ESTIMATED_TIME']."</td><td>" . $row['DELIVERY'] ."</td><td>" . $row['TARGA'] ."</td><td>" . $row['TELAIO'] . "</td><td>".$row['ID']."</td></tr>";
+      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['OPENED_AT']."</td><td>" . $row['DELIVERY'] ."</td><td>" . $row['TARGA'] ."</td><td>".$row['ID']."</td></tr>";
   }
   $html = $html . "</tbody></table>";
   mysqli_free_result($result);
@@ -93,18 +90,16 @@ function showMyWorks($link) {
   $html = "<table class='table table-stripped'>
       <tr>
       <th>DESCRIZIONE</th>
-      <th>NOTE</th>
       <th>DATA DI CREAZIONE</th>
       <th>ULTIMO AGGIORNAMENTO</th>
       <th>DATA DI APERTURA</th>
       <th>DATA DI CHIUSURA</th>
-      <th>TEMPO STIMATO</th>
       <th>DATA DI CONSEGNA</th>
       <th>ID</th>
       </tr>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['NOTE']."</td><td>".$row['CREATED_AT']."</td><td>".$row['UPDATED_AT']."</td><td>".$row['OPENED_AT']."</td><td>";
-      $html = $html .$row['CLOSED_AT']."</td><td>".$row['ESTIMATED_TIME']."</td><td>".$row['DELIVERY'] . "</td><td><form method='post'>
+      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['CREATED_AT']."</td><td>".$row['UPDATED_AT']."</td><td>".$row['OPENED_AT']."</td><td>";
+      $html = $html .$row['CLOSED_AT']."</td><td>".$row['DELIVERY'] . "</td><td><form method='post'>
         <button type='submit' class='btn btn-sm btn-success' name='taken' value=".$row['ID'].">Inizia</button></form></td></tr>";
   }
   $html = $html . "</table>";
@@ -159,17 +154,46 @@ function deleteJobFromDb($link) {
 
 
 /*
-* INSERISCE UN NUOVO LAVORO NEL DATABASE
+* INSERISCE UN NUOVO LAVORO NEL DATABASE DA PARTE DI UN AMMINISTRATORE
 */
 function insertNewWorkInDb($link){
   $description = $_POST['description'];
-  $note = $_POST['note'];
-  $estimated_time = $_POST['estimated_time'];
   $delivery = $_POST['delivery'];
   $targa = $_POST['targa'];
-  $telaio = $_POST['telaio'];
   $forall = intval($_POST['forall']);
-  $sql = "INSERT INTO JOBS (DESCRIPTION, NOTE, CREATED_AT, UPDATED_AT, ESTIMATED_TIME, DELIVERY, TARGA, TELAIO, FORALL) VALUES ('$description ', '$note', CURRENT_DATE(), CURRENT_DATE(), '$estimated_time', '$delivery', '$targa','$telaio', $forall)";
+  $sql = "INSERT INTO JOBS (DESCRIPTION, CREATED_AT, UPDATED_AT, DELIVERY, TARGA, FORALL) VALUES ('$description ', CURRENT_DATE(), CURRENT_DATE(), '$delivery', '$targa', $forall)";
+  $result = $link->query($sql);
+  //echo $result;
+    if(!($forall == 1)){
+        assignJobToUser($link);
+    }
+  mysqli_free_result($result);
+  writeDatabaseLog($link, "aggiunto nuovo lavoro");
+}
+
+
+/*
+* MOSTRA LE SESSIONI CHE NON SONO STATE CHIUSE
+*/
+function showOpenSession($link) {
+  $sql = "SELECT * FROM `INGRESSI` WHERE USCITA IS NULL";
+  $result = $link->query($sql);
+  $html = "<ul>";
+  while ($row = mysqli_fetch_array($result)) {
+      $html = $html . "<li>". $row['USERNAME']."</li>";
+  }
+  return $html;
+}
+
+
+/*
+* INSERISCE UN NUOVO LAVORO NEL DATABASE DA PARTE DI UN UTENTE STANDARD
+*/
+function insertNewWorkInDbFromUser($link){
+  $description = $_POST['description'];
+  $targa = $_POST['targa'];
+  $forall = intval($_POST['forall']);
+  $sql = "INSERT INTO JOBS (DESCRIPTION, CREATED_AT, UPDATED_AT, DELIVERY, TARGA, FORALL) VALUES ('$description ', CURRENT_DATE(), CURRENT_DATE(), CURRENT_DATE(), '$targa', $forall)";
   $result = $link->query($sql);
   //echo $result;
     if(!($forall == 1)){
@@ -272,7 +296,36 @@ function performLogin($link) {
   return $error;
 }
 
-
+/*
+* LOGGA L'UTENTE DALL'OFFICINA
+*/
+function performLoginOfficina($link) {
+  $query = "SELECT * FROM USERS WHERE USERNAME = '" . mysqli_real_escape_string($link, $_POST['username']) . "'";
+  $result = mysqli_query($link, $query);
+  $row = mysqli_fetch_array($result);
+  $error = "";
+  mysqli_free_result($result);
+  if (isset($row)) {
+          $_SESSION['id'] = $row['ID'];
+          $_SESSION['username'] = $row['USERNAME'];
+          $_SESSION['level_id'] = $row['LEVEL_ID'];
+          $_SESSION['is_working'] = $row['ISWORKING'];
+          updateLastLogin($link);
+          if ($_POST['stayLoggedIn'] == '1') {
+              setcookie("id", $row['ID'], time() + 60 * 60 * 24 * 365);
+              setcookie("level_id", $row['LEVEL_ID'], time() + 60 * 60 * 24 * 365);
+          }
+          writeDatabaseLog($link, "Login nel sistema");
+          if(!(intval($_SESSION['is_working'])==0)){
+            redirectToWorkPage();
+          } else {
+            redirectToCorrectPage();
+          }
+  } else {
+      $error = "Login fallito. Riprova.";
+  }
+  return $error;
+}
 
 /*
 * AGGIORNA DATA ED ORA DELL'ULTIMO LOGIN
@@ -471,5 +524,44 @@ function showWorkSessions($link) {
   mysqli_close($con);
   return $html;
 
+}
+
+function registerEntrance($link) {
+  if($_POST['username']!=""){
+    $sql = "INSERT INTO INGRESSI (USERNAME, INGRESSO) VALUES ('".$_POST['username']."', NOW());";
+    $result = mysqli_query($link, $sql);
+    header("Location: index.php?entrance=true");
+  } else {
+    header("Location: index.php?errorRegistration=true");
+  }
+}
+
+function registerExit($link) {
+  if($_POST['username']!=""){
+    $sql = "UPDATE INGRESSI SET USCITA = NOW() WHERE USERNAME = '".$_POST['username']."' ORDER BY ID DESC LIMIT 1";
+    $result = mysqli_query($link, $sql);
+    header("Location: index.php?exit=true");
+  } else {
+    header("Location: index.php?errorRegistration=true");
+  }
+}
+
+function showEntranceAndExit($link) {
+  $result = mysqli_query($link, "SELECT * FROM INGRESSI");
+  $html = "<table id='usertable' width='100%' class='table table-stripped'>
+      <thead>
+      <tr>
+      <th>USERNAME</th>
+      <th>INGRESSO</th>
+      <th>USCITA</th>
+      </tr></thead>";
+
+  while ($row = mysqli_fetch_array($result)) {
+      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['INGRESSO']."</td><td>".$row['USCITA']."</td>";
+  }
+  $html = $html . "</table>";
+  mysqli_free_result($result);
+  mysqli_close($con);
+  return $html;
 }
  ?>

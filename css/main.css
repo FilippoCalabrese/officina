@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #4f4f4f;
+  background-color: gray !important;
 }
 
 table {
@@ -11,4 +11,16 @@ table {
 }
 .btn-sm {
   line-height: 0.8 !important;
+}
+
+input {
+  border: 3px solid black !important;
+}
+
+.container-home {
+  background-color: gray !important;
+}
+
+h1 {
+  font-size: 3rem !important;
 }
