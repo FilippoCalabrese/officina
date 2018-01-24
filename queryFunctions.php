@@ -90,16 +90,11 @@ function showMyWorks($link) {
   $html = "<table class='table table-stripped'>
       <tr>
       <th>DESCRIZIONE</th>
-      <th>DATA DI CREAZIONE</th>
-      <th>ULTIMO AGGIORNAMENTO</th>
-      <th>DATA DI APERTURA</th>
-      <th>DATA DI CHIUSURA</th>
-      <th>DATA DI CONSEGNA</th>
+      <th>TARGA</th>
       <th>ID</th>
       </tr>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['CREATED_AT']."</td><td>".$row['UPDATED_AT']."</td><td>".$row['OPENED_AT']."</td><td>";
-      $html = $html .$row['CLOSED_AT']."</td><td>".$row['DELIVERY'] . "</td><td><form method='post'>
+      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['TARGA']."</td><td><form method='post'>
         <button type='submit' class='btn btn-sm btn-success' name='taken' value=".$row['ID'].">Inizia</button></form></td></tr>";
   }
   $html = $html . "</table>";
@@ -477,6 +472,9 @@ function countWorkSession($link) {
   $result = $link->query($sql);
   $sql = "UPDATE JOBS SET SUSPENDED = 1 WHERE ID =".$jobId;
   $result = $link->query($sql);
+  $sql = "UPDATE USERS SET ISWORKING = 0 WHERE id =".$_SESSION['id'];
+  $result = $link->query($sql);
+  header("Location: index.php");
   writeDatabaseLog($link, "Sospeso e conteggiato il lavoro con id = ".$jobId);
 }
 
