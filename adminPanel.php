@@ -80,12 +80,17 @@ if (array_key_exists("addUser", $_POST)) {
           <li class="nav-item">
             <a class="nav-link active" id="utenti-tab" data-toggle="tab" href="#utenti" role="tab" aria-controls="utenti" aria-selected="true">Utenti</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link" id="lavori-tab" data-toggle="tab" href="#lavori" role="tab" aria-controls="lavori" aria-selected="false">Lavori</a>
           </li>
 
           <li class="nav-item">
             <a class="nav-link" id="ingressi-tab" data-toggle="tab" href="#ingressi" role="tab" aria-controls="ingressi" aria-selected="false">Ingressi e uscite</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" id="buste-tab" data-toggle="tab" href="#buste" role="tab" aria-controls="buste" aria-selected="false">Buste Paga</a>
           </li>
         </ul>
 
@@ -101,6 +106,46 @@ if (array_key_exists("addUser", $_POST)) {
               </div>
 
               <?php echo showEntranceAndExit($link); ?>
+            </section>
+
+
+          </div>
+
+          <div class="tab-pane fade show" id="buste" role="tabpanel" aria-labelledby="buste-tab">
+
+
+            <section id="busteSection">
+              <div class="row">
+                <div class="col-md-12">
+                  <h1 style="margin-bottom: 15px;">GESTIONE BUSTE PAGA</h1>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+
+                	<form method="post" action="BustaPaga.php">
+                		<h3>ricerca per utente. Attenzione: Non verrà chiesta conferma</h3>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Nome Utente</label>
+                      <input type="text" class="form-control" name="usernamePaga" placeholder="nome utente">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Giorno di inizio</label>
+                      <input type="date" name="startTimePaga" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Password</label>
+                      <input type="date" name="endTimePaga" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-success" name="submitPaga">Ricerca</button>
+                    </div>
+                	</form>
+                	<br>
+                </div>
+              </div> <!--- row -->
+              <hr>
             </section>
 
 
@@ -189,6 +234,7 @@ if (array_key_exists("addUser", $_POST)) {
 
 
           </div>
+
           <div class="tab-pane fade" id="lavori" role="tabpanel" aria-labelledby="lavori-tab">
             <section id="jobSection">
               <div class="row">

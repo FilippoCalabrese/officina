@@ -562,4 +562,25 @@ function showEntranceAndExit($link) {
   mysqli_close($con);
   return $html;
 }
+
+
+function showUserWorkedTimeInRange($user, $start, $finish, $link){
+  $sql = "SELECT * FROM `work_session` WHERE username = '".$user."' AND start > '2018-01-01 ".$start."' AND start < '".$finish." 00:00:00'";
+  $result = $link->query($sql);
+  $giorni = mysqli_num_rows($result);
+  echo "<h3>".$user." ha lavorato per ".$giorni." giorni</h3>";
+  $html = "<table id='usertable' width='100%' class='table table-stripped'>
+      <thead>
+      <tr>
+      <th>INIZIO</th>
+      <th>FINE</th>
+      </tr>
+      </thead><tbody>";
+  while ($row = mysqli_fetch_array($result)) {
+      $html = $html . "<tr><td>".$row['start']."</td><td>".$row['finish']."</td>";
+  }
+  $html = $html . "</tbody></table>";
+  return $html;
+
+}
  ?>
