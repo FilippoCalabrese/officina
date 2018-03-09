@@ -1,47 +1,38 @@
 <?php
 
-include('connection.php');
+include 'connection.php';
 
 session_start();
 
-if (array_key_exists("id", $_SESSION) and $_SESSION['level_id'] == 999) {
-    
+if (array_key_exists('id', $_SESSION) and $_SESSION['level_id'] == 999) {
     echo "<p>Loggato come Super Amministratore! <a href='index.php?logout=1'>Log out</a></p>";
-    
 } else {
-    
-    header("Location: index.php");
-    
+    header('Location: index.php');
 }
-
 
 //aggiunge utente se è stato compilato il form
 
-echo ($_SESSION['level_id'].'session');
+echo $_SESSION['level_id'].'session';
 
-
-if (array_key_exists("addUser", $_POST)) {
-    
+if (array_key_exists('addUser', $_POST)) {
     $username = $_POST['username'];
-    
-    $password = $_POST['password'];
-    
-    $firstName = $_POST['firstname'];
-    
-    $lastName = $_POST['lastname'];
-    
-    $access = $_POST['access'];
-    
-    $level_id = $_POST['level_id'];
-    
-    $sql = "INSERT INTO USERS (USERNAME, PASSWORD, FIRSTNAME, LASTNAME, ACCESS, LEVEL_ID) VALUES ('$username', '$password', '$firstName', '$lastName', '$access', '$level_id')";
-    
-    $result = $link->query($sql);
-    
-    echo $result;
-    
-}
 
+    $password = $_POST['password'];
+
+    $firstName = $_POST['firstname'];
+
+    $lastName = $_POST['lastname'];
+
+    $access = $_POST['access'];
+
+    $level_id = $_POST['level_id'];
+
+    $sql = "INSERT INTO USERS (USERNAME, PASSWORD, FIRSTNAME, LASTNAME, ACCESS, LEVEL_ID) VALUES ('$username', '$password', '$firstName', '$lastName', '$access', '$level_id')";
+
+    $result = $link->query($sql);
+
+    echo $result;
+}
 
 ?>
 
