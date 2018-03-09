@@ -1,27 +1,26 @@
 <?php
-include('connection.php');
-include('queryFunctions.php');
-include('utilityFunctions.php');
+include 'connection.php';
+include 'queryFunctions.php';
+include 'utilityFunctions.php';
 
 session_start();
 checkCookies();
 verifyPermission(10);
 
-if (array_key_exists("closeWork", $_POST)) {
+if (array_key_exists('closeWork', $_POST)) {
     updateWork($link);
     closeWork($link);
     //TODO: inserire conteggio ore
-    header("Location: index.php");
+    header('Location: index.php');
 }
 
-if(array_key_exists("suspendWork", $_POST)){
-  countWorkSession($link);
+if (array_key_exists('suspendWork', $_POST)) {
+    countWorkSession($link);
 }
 
-if(array_key_exists("restartWork", $_POST)){
-  unlockWork($link);
+if (array_key_exists('restartWork', $_POST)) {
+    unlockWork($link);
 }
-
 
 ?>
 

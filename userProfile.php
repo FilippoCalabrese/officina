@@ -1,20 +1,17 @@
 <?php
-include('connection.php');
-include('utilityFunctions.php');
-include('queryFunctions.php');
-if(isset($_GET['userProfileId'])){
-
-  $userRow = fetchSelectedUserData($link);
-  $username = $userRow['USERNAME'];
-  $firstName = $userRow['FIRSTNAME'];
-  $lastName = $userRow['LASTNAME'];
-  $isWorking = $userRow['ISWORKING'];
-  $logRow = fetchDatabaseLogData($link, $userRow['ID']);
-
+include 'connection.php';
+include 'utilityFunctions.php';
+include 'queryFunctions.php';
+if (isset($_GET['userProfileId'])) {
+    $userRow = fetchSelectedUserData($link);
+    $username = $userRow['USERNAME'];
+    $firstName = $userRow['FIRSTNAME'];
+    $lastName = $userRow['LASTNAME'];
+    $isWorking = $userRow['ISWORKING'];
+    $logRow = fetchDatabaseLogData($link, $userRow['ID']);
 } else {
-  header("Location: index.php");
+    header('Location: index.php');
 }
-
 
 ?>
 
@@ -54,8 +51,8 @@ if(isset($_GET['userProfileId'])){
             <th>Indirizzo IP</th>
           </tr>
                 <?php
-                  while( $row = mysqli_fetch_array($logRow) ) {
-                    echo printLogTable($row);
+                  while ($row = mysqli_fetch_array($logRow)) {
+                      echo printLogTable($row);
                   }
                 ?>
         </table>

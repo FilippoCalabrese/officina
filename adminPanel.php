@@ -1,38 +1,29 @@
 <?php
-include ('connection.php');
-include ('queryFunctions.php');
-include ('utilityFunctions.php');
+include 'connection.php';
+include 'queryFunctions.php';
+include 'utilityFunctions.php';
 session_start();
-
-
 
 checkCookies();
 verifyPermission(100);
 
-
 // rimuove l'utente se si è compilato il form
-if (array_key_exists("deleteUser", $_POST)) {
+if (array_key_exists('deleteUser', $_POST)) {
     deleteUserFromDb($link);
 }
 
-
-
 // rimuove l'utente se si è compilato il form
-if (array_key_exists("deleteJobSubmit", $_POST)) {
+if (array_key_exists('deleteJobSubmit', $_POST)) {
     deleteJobFromDb($link);
 }
 
-
-
 // aggiunge un lavoro se è stato compilato il form
-if (array_key_exists("addJob", $_POST)) {
+if (array_key_exists('addJob', $_POST)) {
     insertNewWorkInDb($link);
 }
 
-
-
 // aggiunge utente se è stato compilato il form
-if (array_key_exists("addUser", $_POST)) {
+if (array_key_exists('addUser', $_POST)) {
     addUserInDb($link);
 }
 ?>
