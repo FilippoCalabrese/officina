@@ -1,7 +1,7 @@
 <?php
-include('queryFunctions.php');
-include('connection.php');
-include('head.php');
+include 'queryFunctions.php';
+include 'connection.php';
+include 'head.php';
 ?>
 
 <script type="text/javascript">
