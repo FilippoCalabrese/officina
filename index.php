@@ -21,13 +21,8 @@ if (array_key_exists('entrance', $_GET)) {
         </div>';
 }
 
-<<<<<<< HEAD
 if(array_key_exists("errorRegistration", $_GET)) {
   echo '<div class="alert alert-danger" role="alert">
-=======
-if (array_key_exists('errorRegistration', $_GET) || array_key_exists('errorRegistration', $_GET)) {
-    echo '<div class="alert alert-danger" role="alert">
->>>>>>> d78c408f51015aba7c2742531da0b5c893713e0a
           ATTENZIONE! NON HAI INSERITO IL TUO NOME UTENTE. RIPROVA
         </div>';
 }
