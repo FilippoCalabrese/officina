@@ -4,6 +4,22 @@ include('connection.php');
 include('head.php');
 ?>
 
+<script type="text/javascript">
+    $(document).ready( function () {
+    $('#usertable').dataTable({
+      "pageLength": 60,
+        responsive: true,
+        "scrollX": true,
+        dom: "Bfrtip",
+        buttons: [
+            'excel',
+            'print',
+            'pdf'
+        ]
+    });
+    } );
+  </script>
+
 <body>
   <div class="container">
     <div class="row">

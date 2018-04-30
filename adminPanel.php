@@ -57,6 +57,7 @@ if (array_key_exists("addUser", $_POST)) {
     $(document).ready( function () {
     $('table').dataTable({
         responsive: true,
+        "order": [[ 3, "desc" ]],
         "scrollX": true,
         dom: "Bfrtip",
         buttons: [
@@ -92,6 +93,10 @@ if (array_key_exists("addUser", $_POST)) {
           <li class="nav-item">
             <a class="nav-link" id="buste-tab" data-toggle="tab" href="#buste" role="tab" aria-controls="buste" aria-selected="false">Buste Paga</a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link" id="lavorazioni-tab" data-toggle="tab" href="#lavorazioni" role="tab" aria-controls="lavorazioni" aria-selected="false">Lavorazioni</a>
+          </li>
         </ul>
 
         <div class="tab-content" id="myTabContent">
@@ -111,6 +116,45 @@ if (array_key_exists("addUser", $_POST)) {
 
           </div>
 
+          <div class="tab-pane fade show" id="lavorazioni" role="tabpanel" aria-labelledby="lavorazioni-tab">
+
+
+            <section id="lavorazioniSection">
+              <div class="row">
+                <div class="col-md-12">
+                  <h1 style="margin-bottom: 15px;">VISUALIZZA LAVORAZIONI</h1>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+
+                	<form method="post" action="Lavorazioni.php">
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Nome Utente</label>
+                      <input type="text" class="form-control" name="usernameLavorazioni" placeholder="nome utente">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Dal</label>
+                      <input type="date" name="startTimeLavorazioni" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Fino al</label>
+                      <input type="date" name="endTimeLavorazioni" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-success" name="submitPaga">Ricerca</button>
+                    </div>
+                	</form>
+                	<br>
+                </div>
+              </div> <!--- row -->
+              <hr>
+            </section>
+
+
+          </div>
+
           <div class="tab-pane fade show" id="buste" role="tabpanel" aria-labelledby="buste-tab">
 
 
@@ -125,17 +169,16 @@ if (array_key_exists("addUser", $_POST)) {
                 <div class="col-md-12">
 
                 	<form method="post" action="BustaPaga.php">
-                		<h3>ricerca per utente. Attenzione: Non verrà chiesta conferma</h3>
                     <div class="form-group">
                       <label for="exampleInputPassword1">Nome Utente</label>
                       <input type="text" class="form-control" name="usernamePaga" placeholder="nome utente">
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Giorno di inizio</label>
+                      <label for="exampleInputPassword1">Dal</label>
                       <input type="date" name="startTimePaga" class="form-control">
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Password</label>
+                      <label for="exampleInputPassword1">Fino al</label>
                       <input type="date" name="endTimePaga" class="form-control">
                     </div>
                     <div class="form-group">
@@ -264,11 +307,11 @@ if (array_key_exists("addUser", $_POST)) {
                             </div>
                             <div class="form-group">
                               <label for="targa">Targa</label>
-                              <input type="text" name="targa" class="form-control" id="Targa" placeholder="Targa">
+                              <input type="text" name="targa" class="form-control" id="Targa" placeholder="Targa" required>
                             </div>
                             <div class="form-group">
                               <label for="telaio">ID (separati da spazio) a cui assegnare il lavoro</label>
-                              <input type="text" name="assegna" class="form-control" id="assegna" placeholder="IDs">
+                              <input type="text" name="assegna" class="form-control" id="assegna" placeholder="IDs" required>
                             </div>
                             <div class="form-group">
                               <label for="delivery">Data di consegna</label>

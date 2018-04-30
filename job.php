@@ -10,6 +10,8 @@ if(isset($_GET['jobId'])){
   $created_at = $jobRow['CREATED_AT'];
   $delivery = $jobRow['DELIVERY'];
   $worked_hours = $jobRow['WORKED_HOURS'];
+  $targa = $jobRow['TARGA'];
+  $telaio = $jobRow['TELAIO'];
 
   $logRow = fetchJobActivityData($link, $jobRow['ID']);
 
@@ -20,9 +22,15 @@ if(isset($_GET['jobId'])){
 checkCookies();
 verifyPermission(10);
 
+if (array_key_exists("updateRequest", $_POST)) {
+    updateRequest($link, $jobRow['ID']);
+}
+
 if (array_key_exists("submitHours", $_POST)) {
     countsHours($link);
 }
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,11 +52,44 @@ if (array_key_exists("submitHours", $_POST)) {
     <div class="container">
       <div class="row">
         <div class="col-md-12">
+          <br>
+          <button class="btn btn-success" data-toggle="collapse" data-target="#edit">Modifica Informazioni</button>
+
+
+
+          <form class="collapse" method="POST" id="edit">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Descrizione</label>
+              <input type="text" class="form-control" name="descriptionUpdate" value="<?php echo $description; ?>">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Targa</label>
+              <input type="text" class="form-control" name="targaUpdate" value="<?php echo $targa; ?>">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Telaio</label>
+              <input type="text" class="form-control" name="telaioUpdate" value="<?php echo $telaio; ?>">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Date di inizio</label>
+              <input type="datetime-local" class="form-control" name="creationDate" value="<?php echo $created_at; ?>">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Data di fine</label>
+              <input type="datetime-local" class="form-control" name="consegnaDate" value="<?php echo $delivery; ?>">
+            </div>
+            <button type="submit" name="updateRequest" class="btn btn-primary">Aggiorna Informazioni</button>
+          </form>
+        </div>
+        <hr>
+        <div class="col-md-12">
           <h1>SCHEDA DEL LAVORO: <?php echo $description ?></h1>
           <br>
           <p>DESCRIZIONE: <?php echo $description; ?></p>
-          <p>DATA DI CREAZIONE: <?php echo $created_at; ?></p>
-          <p>DATA DI CONSEGNA: <?php echo $delivery; ?></p>
+          <p>TARGA: <?php echo $targa; ?></p>
+          <p>TELAIO: <?php echo $telaio; ?></p>
+          <p>DATA DI INIZIO: <?php echo $created_at; ?></p>
+          <p>DATA DI FINE: <?php echo $delivery; ?></p>
 
           <?php echo showWorkSessions($link); ?>
         </div>

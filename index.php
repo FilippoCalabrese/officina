@@ -21,7 +21,7 @@ if(array_key_exists("entrance", $_GET)) {
         </div>';
 }
 
-if(array_key_exists("errorRegistration", $_GET) || array_key_exists("errorRegistration", $_GET)) {
+if(array_key_exists("errorRegistration", $_GET)) {
   echo '<div class="alert alert-danger" role="alert">
           ATTENZIONE! NON HAI INSERITO IL TUO NOME UTENTE. RIPROVA
         </div>';

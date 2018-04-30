@@ -17,7 +17,14 @@ function showDatabaseUsers($link) {
       </tr></thead>";
 
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td><a target='_blank' href='userProfile.php?userProfileId=".$row['ID']."'>".$row['USERNAME']."</a></td><td>".$row['FIRSTNAME']."</td><td>".$row['LASTNAME']."</td><td>".$row['ACCESS']."</td><td>".$row['LOGOUT']."</td><td>".$row['LEVEL_ID']."</td><td>".$row['ID']."</td></tr>";
+
+    $login = strtotime($row['ACCESS']);
+    $logout = strtotime($row['LOGOUT']);
+    $mysqlLogin = date( 'd-m-Y H:i:s', $login );
+    $mysqlLogout = date( 'd-m-Y H:i:s', $logout );
+
+
+      $html = $html . "<tr><td><a target='_blank' href='userProfile.php?userProfileId=".$row['ID']."'>".$row['USERNAME']."</a></td><td>".$row['FIRSTNAME']."</td><td>".$row['LASTNAME']."</td><td>".$mysqlLogin."</td><td>".$mysqlLogout."</td><td>".$row['LEVEL_ID']."</td><td>".$row['ID']."</td></tr>";
   }
   $html = $html . "</table>";
   mysqli_free_result($result);
@@ -34,15 +41,20 @@ function showDatabaseWorks($link) {
   $html = "<table id='workTable' width='100%' class='table table-stripped'>
 
       <thead>
-      <tr><th>DESCRIZIONE</th>
+      <tr><th>TARGA</th>
       <th>DATA DI APERTURA</th>
       <th>DATA DI CONSEGNA</th>
-      <th>TARGA</th>
+      <th>DESCRIZIONE</th>
       <th>ID</th>
       </tr>
       </thead><tbody>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['OPENED_AT']."</td><td>" . $row['DELIVERY'] ."</td><td>" . $row['TARGA'] ."</td><td>".$row['ID']."</td></tr>";
+    $openedAt = strtotime($row['OPENED_AT']);
+    $delivery = strtotime($row['DELIVERY']);
+    $mysqldateStart = date( 'd-m-Y H:i:s', $openedAt );
+    $mysqldateFinish = date( 'd-m-Y H:i:s', $delivery );
+
+      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['TARGA']."</a></td><td>".$mysqldateStart."</td><td>" . $mysqldateFinish ."</td><td>" . $row['DESCRIPTION'] ."</td><td>".$row['ID']."</td></tr>";
   }
   $html = $html . "</tbody></table>";
   mysqli_free_result($result);
@@ -53,27 +65,27 @@ function showDatabaseWorks($link) {
 
 //mostra i lavori completati
 function showCompletedWorks($link) {
-  $result = mysqli_query($link, "SELECT * FROM JOBS WHERE CLOSED_AT IS NOT NULL");
-  $html = "<table class='table table-stripped'>
+  $result = $link->query("SELECT * FROM JOBS WHERE CLOSED_AT IS NOT NULL");
+  $html = "<table id='workTable' width='100%' class='table table-stripped'>
+
       <thead>
-      <tr>
-      <th>DESCRIZIONE</th>
-      <th>NOTE</th>
-      <th>DATA DI CREAZIONE</th>
+      <tr><th>TARGA</th>
       <th>DATA DI APERTURA</th>
-      <th>DATA DI CHIUSURA</th>
-      <th>TEMPO STIMATO</th>
       <th>DATA DI CONSEGNA</th>
-      <th>TARGA</th>
-      <th>TELAIO</th>
+      <th>DESCRIZIONE</th>
       <th>ID</th>
       </tr>
-      </thead>";
+      </thead><tbody>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['DESCRIPTION']."</a></td><td>".$row['NOTE']."</td><td>".$row['CREATED_AT']."</td><td>".$row['OPENED_AT']."</td><td>".$row['CLOSED_AT'];
-      $html = $html ."</td><td>".$row['ESTIMATED_TIME']."</td><td>" . $row['DELIVERY'] ."</td><td>" . $row['TARGA'] ."</td><td>" . $row['TELAIO'] . "</td><td>".$row['ID']."</td></tr>";
+
+      $openedAt = strtotime($row['OPENED_AT']);
+      $delivery = strtotime($row['DELIVERY']);
+      $mysqldateStart = date( 'd-m-Y H:i:s', $openedAt );
+      $mysqldateFinish = date( 'd-m-Y H:i:s', $delivery );
+
+      $html = $html . "<tr><td><a href='job.php?jobId=".$row['ID']."' target='_blank'>".$row['TARGA']."</a></td><td>".$mysqldateStart."</td><td>" . $mysqldateFinish ."</td><td>" . $row['DESCRIPTION'] ."</td><td>".$row['ID']."</td></tr>";
   }
-  $html = $html . "</table>";
+  $html = $html . "</tbody></table>";
   mysqli_free_result($result);
   mysqli_close($con);
   return $html;
@@ -513,9 +525,21 @@ function showWorkSessions($link) {
       <th>UTENTE</th>
       <th>ORA DI INIZIO</th>
       <th>ORA DI FINE</th>
+      <th>TEMPO IMPIEGATO</th>
       </tr>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['START']."</td><td>".$row['FINISH']."</td></tr>";
+
+    $start = strtotime($row['START']);
+    $finish = strtotime($row['FINISH']);
+    $mysqldateStart = date( 'd-m-Y H:i:s', $start );
+    $mysqldateFinish = date( 'd-m-Y H:i:s', $finish );
+
+    $dataInizio = new DateTime($row['START']);
+    $dataFine = new DateTime($row['FINISH']);
+
+    $interval = date_diff($dataInizio,$dataFine);
+
+      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$mysqldateStart."</td><td>".$mysqldateFinish."</td><td>".$interval->format('%h:%i:%s')."</td></tr>";
   }
   $html = $html . "</table>";
   mysqli_free_result($result);
@@ -526,7 +550,7 @@ function showWorkSessions($link) {
 
 function registerEntrance($link) {
   if($_POST['username']!=""){
-    $sql = "INSERT INTO INGRESSI (USERNAME, INGRESSO) VALUES ('".$_POST['username']."', NOW());";
+    $sql = "INSERT INTO INGRESSI (USERNAME, INGRESSO) VALUES ('".$_POST['username']."', DATE_ADD(NOW(), INTERVAL 8 HOUR));";
     $result = mysqli_query($link, $sql);
     header("Location: index.php?entrance=true");
   } else {
@@ -536,7 +560,7 @@ function registerEntrance($link) {
 
 function registerExit($link) {
   if($_POST['username']!=""){
-    $sql = "UPDATE INGRESSI SET USCITA = NOW() WHERE USERNAME = '".$_POST['username']."' ORDER BY ID DESC LIMIT 1";
+    $sql = "UPDATE INGRESSI SET USCITA = DATE_ADD(NOW(), INTERVAL 8 HOUR) WHERE USERNAME = '".$_POST['username']."' AND USCITA IS NULL";
     $result = mysqli_query($link, $sql);
     header("Location: index.php?exit=true");
   } else {
@@ -555,7 +579,11 @@ function showEntranceAndExit($link) {
       </tr></thead>";
 
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$row['INGRESSO']."</td><td>".$row['USCITA']."</td>";
+    $phpDateStart = strtotime($row['INGRESSO']);
+    $phpDateFinish = strtotime($row['USCITA']);
+    $mysqldateStart = date( 'd-m-Y H:i:s', $phpDateStart );
+    $mysqldateFinish = date( 'd-m-Y H:i:s', $phpDateFinish );
+      $html = $html . "<tr><td>".$row['USERNAME']."</td><td>".$mysqldateStart."</td><td>".$mysqldateFinish."</td>";
   }
   $html = $html . "</table>";
   mysqli_free_result($result);
@@ -565,22 +593,86 @@ function showEntranceAndExit($link) {
 
 
 function showUserWorkedTimeInRange($user, $start, $finish, $link){
-  $sql = "SELECT * FROM `work_session` WHERE username = '".$user."' AND start > '2018-01-01 ".$start."' AND start < '".$finish." 00:00:00'";
+  $user = strtoupper ( $user );
+  $sql = "SELECT * FROM INGRESSI WHERE USERNAME = '".$user."' AND INGRESSO >= '".$start." 00:00:00' AND INGRESSO <= '".$finish." 23:59:59' ORDER BY INGRESSO DESC";
   $result = $link->query($sql);
   $giorni = mysqli_num_rows($result);
-  echo "<h3>".$user." ha lavorato per ".$giorni." giorni</h3>";
+  echo "<h3>".$user." Sono presenti ".$giorni." record</h3>";
   $html = "<table id='usertable' width='100%' class='table table-stripped'>
       <thead>
       <tr>
       <th>INIZIO</th>
       <th>FINE</th>
+      <th>ORE LAVORATE</th>
       </tr>
       </thead><tbody>";
   while ($row = mysqli_fetch_array($result)) {
-      $html = $html . "<tr><td>".$row['start']."</td><td>".$row['finish']."</td>";
+    $phpDateStart = strtotime($row['INGRESSO']);
+    $phpDateFinish = strtotime($row['USCITA']);
+    $mysqldateStart = date( 'd-m-Y H:i:s', $phpDateStart );
+    $mysqldateFinish = date( 'd-m-Y H:i:s', $phpDateFinish );
+
+    $dataInizio = new DateTime($row['INGRESSO']);
+    $dataFine = new DateTime($row['USCITA']);
+
+    $interval = date_diff($dataInizio,$dataFine);
+
+
+      $html = $html . "<tr><td>".$mysqldateStart."</td><td>".$mysqldateFinish."</td><td>".$interval->format('%h:%i:%s')."</td></tr>";
   }
   $html = $html . "</tbody></table>";
   return $html;
 
 }
+
+function trovaTargaDaId($id, $link) {
+  $sql = "SELECT TARGA FROM JOBS WHERE ID = ".$id;
+  $result = $link->query($sql);
+  $row = mysqli_fetch_array($result);
+  return strtoupper ( $row[0] );
+}
+
+function mostraLavorazioni($user, $start, $finish, $link){
+  $user = strtoupper ( $user );
+  $sql = "SELECT * FROM WORK_SESSION WHERE USERNAME = '".$user."' AND START >= '".$start." 00:00:00' AND START <= '".$finish." 23:59:59'";
+  $result = $link->query($sql);
+  $giorni = mysqli_num_rows($result);
+  echo "<h3>".$user." HA EFFETTUATO LE SEGUENTI LAVORAZIONI</h3>";
+  $html = "<table id='usertable' width='100%' class='table table-stripped'>
+      <thead>
+      <tr>
+      <th>INIZIO</th>
+      <th>FINE</th>
+      <th>TARGA</th>
+      <th>TEMPO IMPIEGATO</th>
+      </tr>
+      </thead><tbody>";
+  while ($row = mysqli_fetch_array($result)) {
+
+    $phpDateStart = strtotime($row['START']);
+    $phpDateFinish = strtotime($row['FINISH']);
+    $mysqldateStart = date( 'd-m-Y H:i:s', $phpDateStart );
+    $mysqldateFinish = date( 'd-m-Y H:i:s', $phpDateFinish );
+
+    $dataInizio = new DateTime($row['START']);
+    $dataFine = new DateTime($row['FINISH']);
+
+    $interval = date_diff($dataInizio,$dataFine);
+
+      $html = $html . "<tr><td>".$mysqldateStart."</td><td>".$mysqldateFinish."</td><td>".trovaTargaDaId($row['WORK_ID'], $link)."</td><td>".$interval->format('%h:%i:%s')."</td>";
+  }
+  $html = $html . "</tbody></table>";
+  return $html;
+
+}
+
+function updateRequest($link, $id) {
+  $sql = "update JOBS set DESCRIPTION = '".$_POST['descriptionUpdate']."', CREATED_AT = '".$_POST['creationDate']."', DELIVERY = '". $_POST['consegnaDate']."', TARGA = '".$_POST['targaUpdate']."', TELAIO = '".$_POST['telaioUpdate']."' where ID =".$id;
+  $result = $link->query($sql);
+  echo "<meta http-equiv='refresh' content='0'>";
+  //echo $sql;
+
+}
+
+
  ?>

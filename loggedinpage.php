@@ -70,7 +70,7 @@ if(array_key_exists("taken", $_POST)) {
                     </div>
                     <div class="form-group">
                       <label for="targa">Targa</label>
-                      <input type="text" name="targa" class="form-control" id="Targa" placeholder="Targa">
+                      <input type="text" name="targa" class="form-control" id="Targa" placeholder="Targa" required>
                     </div>
                     <div class="form-group">
                       <input type="hidden" name="forall" value="1">
