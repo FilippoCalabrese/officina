@@ -1,8 +1,9 @@
 <?php
-include('connection.php');
-include('queryFunctions.php');
-include('utilityFunctions.php');
+include 'connection.php';
+include 'queryFunctions.php';
+include 'utilityFunctions.php';
 session_start();
+<<<<<<< HEAD
 if(isset($_GET['jobId'])){
 
   $jobRow = fetchSelectedJobData($link);
@@ -14,19 +15,32 @@ if(isset($_GET['jobId'])){
   $telaio = $jobRow['TELAIO'];
 
   $logRow = fetchJobActivityData($link, $jobRow['ID']);
+=======
+if (isset($_GET['jobId'])) {
+    $jobRow = fetchSelectedJobData($link);
+    $description = $jobRow['DESCRIPTION'];
+    $created_at = $jobRow['CREATED_AT'];
+    $delivery = $jobRow['DELIVERY'];
+    $worked_hours = $jobRow['WORKED_HOURS'];
+>>>>>>> d78c408f51015aba7c2742531da0b5c893713e0a
 
+    $logRow = fetchJobActivityData($link, $jobRow['ID']);
 } else {
-  header("Location: index.php");
+    header('Location: index.php');
 }
 
 checkCookies();
 verifyPermission(10);
 
+<<<<<<< HEAD
 if (array_key_exists("updateRequest", $_POST)) {
     updateRequest($link, $jobRow['ID']);
 }
 
 if (array_key_exists("submitHours", $_POST)) {
+=======
+if (array_key_exists('submitHours', $_POST)) {
+>>>>>>> d78c408f51015aba7c2742531da0b5c893713e0a
     countsHours($link);
 }
 

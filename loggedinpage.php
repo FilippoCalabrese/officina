@@ -1,23 +1,22 @@
 <?php
-include ('connection.php');
-include ('queryFunctions.php');
-include ('utilityFunctions.php');
+include 'connection.php';
+include 'queryFunctions.php';
+include 'utilityFunctions.php';
 session_start();
 
 checkCookies();
 verifyPermission(10);
 
 // aggiunge un lavoro se è stato compilato il form
-if (array_key_exists("addJob", $_POST)) {
+if (array_key_exists('addJob', $_POST)) {
     insertNewWorkInDbFromUser($link);
 }
 
+if (array_key_exists('taken', $_POST)) {
+    $_SESSION['is_working'] = intval($_POST['taken']);
+    updateMyWork($link);
 
-if(array_key_exists("taken", $_POST)) {
-  $_SESSION['is_working'] = intval($_POST['taken']);
-  updateMyWork($link);
-
-  header("Location: work.php");
+    header('Location: work.php');
 }
 
 ?>
