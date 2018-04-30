@@ -3,17 +3,16 @@ include 'connection.php';
 include 'queryFunctions.php';
 include 'utilityFunctions.php';
 session_start();
-if(isset($_GET['jobId'])){
+if (isset($_GET['jobId'])) {
+    $jobRow = fetchSelectedJobData($link);
+    $description = $jobRow['DESCRIPTION'];
+    $created_at = $jobRow['CREATED_AT'];
+    $delivery = $jobRow['DELIVERY'];
+    $worked_hours = $jobRow['WORKED_HOURS'];
+    $targa = $jobRow['TARGA'];
+    $telaio = $jobRow['TELAIO'];
 
-  $jobRow = fetchSelectedJobData($link);
-  $description = $jobRow['DESCRIPTION'];
-  $created_at = $jobRow['CREATED_AT'];
-  $delivery = $jobRow['DELIVERY'];
-  $worked_hours = $jobRow['WORKED_HOURS'];
-  $targa = $jobRow['TARGA'];
-  $telaio = $jobRow['TELAIO'];
-
-  $logRow = fetchJobActivityData($link, $jobRow['ID']);
+    $logRow = fetchJobActivityData($link, $jobRow['ID']);
 
     $logRow = fetchJobActivityData($link, $jobRow['ID']);
 } else {
@@ -23,14 +22,13 @@ if(isset($_GET['jobId'])){
 checkCookies();
 verifyPermission(10);
 
-if (array_key_exists("updateRequest", $_POST)) {
+if (array_key_exists('updateRequest', $_POST)) {
     updateRequest($link, $jobRow['ID']);
 }
 
-if (array_key_exists("submitHours", $_POST)) {
+if (array_key_exists('submitHours', $_POST)) {
     countsHours($link);
 }
-
 
 ?>
 <!DOCTYPE html>
